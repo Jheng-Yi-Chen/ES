@@ -13,14 +13,14 @@ output:
 [Enterprise Survey](https://www.enterprisesurveys.org/) is a face-to-face and firm-level data, conducted by __World Bank.__
 I take __China__ in __2012__ for example.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
-
 ```{r}
 library(foreign)
-china<-read.dta(file="C:/Users/CJY/Desktop/to_IISAS/China-2012-full ES N2700 data.dta")
-attach(china)
+library(RCurl)
+library(XML)
+url <- "https://github.com/qwtehvn/es/blob/master/China-2012-full_ES_N2700_data.dta"
+urldata <- getURL(url)
+cn <- readHTMLTable(urldata, stringsAsFactors = FALSE)
+attach(cn)
 ```
 
 # Basic detail, Industry 
