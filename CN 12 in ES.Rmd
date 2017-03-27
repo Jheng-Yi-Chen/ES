@@ -1,0 +1,55 @@
+---
+title: "CN 12 in ES"
+author: "Jheng-Yi Chen"
+date: "February 25, 2017"
+output:
+  ioslides_presentation: default
+  beamer_presentation: default
+  slidy_presentation: default
+---
+
+# CN 12 in ES
+
+[Enterprise Survey](https://www.enterprisesurveys.org/) is a face-to-face and firm-level data, conducted by __World Bank.__
+I take __China__ in __2012__ for example.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(foreign)
+china<-read.dta(file="C:/Users/CJY/Desktop/to_IISAS/China-2012-full ES N2700 data.dta")
+attach(china)
+```
+
+# Basic detail, Industry 
+
+First, we need to know some basic detail about this data. I want to see the distribution of these firm's industry.
+
+#
+```{r, echo=TRUE}
+library(ggplot2)
+industryplot<-ggplot(china, aes(a4a))+
+  geom_bar()+
+  coord_flip()
+industryplot
+ggsave("industryplot.png")
+```
+
+![](industryplot.png)
+
+# IT and Retail
+
+```{r}
+a4a<-ITandRetail
+ITandRetail <- NA
+ITandRetail[a4a = "IT" ] <- 1
+ITandRetail[a4a = "Retail" ] <- 2
+table(ITandRetail)
+
+ownership<-ggplot(china$a4a, aes(b2a, b2b))
+```
+
+
+
