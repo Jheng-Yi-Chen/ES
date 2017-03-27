@@ -19,18 +19,22 @@ library(RCurl)
 library(XML)
 url <- "https://github.com/qwtehvn/es/blob/master/China-2012-full_ES_N2700_data.dta"
 urldata <- getURL(url)
-cn <- readHTMLTable(urldata, stringsAsFactors = FALSE)
+cn <- readHTMLTable(urldata)
 attach(cn)
 ```
 
-# Basic detail, Industry 
+```{r}
+cn <- read.dta("C:/Users/CJY/Desktop/China-2012-full_ES_N2700_data.dta")
+attach(cn)
+```
 
-First, we need to know some basic detail about this data. I want to see the distribution of these firm's industry.
+
+# Industry
 
 #
 ```{r, echo=TRUE}
 library(ggplot2)
-industryplot<-ggplot(china, aes(a4a))+
+industryplot <- ggplot(cn, aes(a4a))+
   geom_bar()+
   coord_flip()
 industryplot
@@ -39,7 +43,7 @@ ggsave("industryplot.png")
 
 ![](industryplot.png)
 
-# IT and Retail
+#
 
 ```{r}
 a4a<-ITandRetail
