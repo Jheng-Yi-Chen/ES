@@ -6,7 +6,7 @@ library(foreign)
 es1 <- read.dta("C:/Users/CJY/Desktop/es/ES-Indicators-Database-.dta")
 #tfp <- read.dta("C:/Users/CJY/Desktop/es/Firm Level TFP Estimates and Factor Ratios_February_21_2017.dta")
 #attach(es1)
-qog1 <- read.dta("C:/Users/CJY/Desktop/es/qog_bas_ts_jan17.dta")
+qog1 <- read.dta("C:/Users/CJY/Desktop/es/qog_std_ts_jan17.dta")
 
 ############################################################
 
@@ -22,15 +22,19 @@ mr1 <- merge(x = es1, y = qog1, by = "cy")
 # http://www.cookbook-r.com/Manipulating_data/Recoding_data/
 
 mr1$soe <- NULL
-mr$soe[mr1$car4 >= 1] <- 0
+mr1$soe[mr1$car4 >= 1] <- 0
 mr1$soe[mr1$car4 < 1] <- 2
 table(mr1$soe)
 
 # http://www.statmethods.net/management/subset.html
 
-es2 <- mr1[ which(mr1$car4 >= 1), ]
+es2 <- mr1[ which(mr1$car4 >= 1), ]# soe
 
-es3 <- mr1[ which(mr1$region == "EAP"), ]
+es2$fh_rol2 <- es2$fh_rol + 1
+
+es4 <- es2[ which(es2$stra_sector=="Manufacturing"), ]# Manufacturing
+
+es3 <- mr1[ which(mr1$region == "EAP"), ]# east asia and pacific
 
 wirte.csv(es2, file = "C:/Users/CJY/Desktop/es/es2.csv")
 write.dta(es2, file = "C:/Users/CJY/Desktop/es/es2.dta")
@@ -83,6 +87,11 @@ table(es2$obst15)# the biggest obstacle, transport
 table(es2$fin2)
 table(es2$stra_sector)
 
+table(es2$fh_rol)
+table(es2$fh_rol2)
+table(es2$pwt_hci)
+table(es2$polity)
+
 ############################################################
 
 library(plyr)
@@ -117,7 +126,16 @@ comapnyage <- ggplot(es2, aes(es2$car1))+
   scale_fill_manual(values = c("es2$car1"))+
   labs(x="company age")
 comapnyage
-ggsave("C:/Users/CJY/Desktop/es/company age.png")
+ggsave("C:/Users/CJY/Desktop/es/company_age.png")
+
+comapnysize <- ggplot(es2, aes(es2$size))+
+  geom_bar(aes(color = es2$size))+
+  coord_flip()+
+  scale_fill_manual(values = c("es2$size"))+
+  labs(x="company size")
+comapnysize
+ggsave("C:/Users/CJY/Desktop/es/company size.png")
+
 
 expper <- qplot(es2$perf1, es2$car6, data = es2, colour = factor(es2$exporter)) + 
   scale_colour_manual(values = c("red","green"))
@@ -137,8 +155,6 @@ perff2 <- ggplot(es3, aes(x = country2, y = perf1)) +
   geom_boxplot()
 perff2
 
-
-
 ############################################################
 
 ggplot(es2, aes(x=es2$obst1)) + 
@@ -157,28 +173,41 @@ mosaicplot(~obst1 + car1, data = es2, main = "Survival on The Titanic", color= T
 
 ############################################################
 
-model1 <- lm(perf1 ~ country2 + stra_sector + size + exporter + car1 + car6 + 
-               factor(obst1) + factor(obst2) + factor(obst3) + factor(obst4) + factor(obst5) + factor(obst6) + factor(obst7) + factor(obst8) + factor(obst9) + factor(obst10) + factor(obst11) + factor(obst12) + factor(obst13) + factor(obst14) + factor(obst15), data = es2)
-summary(model1)
-
-model2 <- lm(perf1 ~ stra_sector + exporter + factor(obst1) + factor(obst8) + factor(obst11), data = es2)
-summary(model2)
-
-model3 <- lm(perf1 ~ exporter + factor(obst1) + factor(obst8) + factor(obst11), data = es2)
-summary(model3)
-
 library(lme4)
 
-model4 <- lmer(perf1 ~ exporter + factor(obst1) + factor(obst8) + factor(obst11) + (1|country2), data = es2)
+model1 <- lmer(perf1 ~ exporter + size + car6 +
+                 factor(obst1) + factor(obst11) +
+                 (1|country2), data = es2)
+summary(model1)
+print(model1)
+coef((model1))
+
+model4 <- lmer(perf1 ~ stra_sector + exporter + size +
+                 factor(obst1) + factor(obst11) +
+                 (1|country2), data = es2)
 summary(model4)
 print(model4)
+coef((model4))
 
-model5 <- lmer(perf1 ~ exporter + factor(obst1) + factor(obst8) + factor(obst11) + (1|country2), data = es3)
+model5 <- lmer(perf1 ~ exporter +
+                 exporter:fh_rol2 + exporter:pwt_hci +
+                 fh_rol2 + pwt_hci +
+                 (1|country2), data = es2)
 summary(model5)
 print(model5)
+coef((model5))
+
 
 ############################################################
 
+summary(es2$exporter)
+summary(es2$size)
 
+summary(es2$fh_rol2);length(es2$fh_rol2)
+summary(es2$pwt_hci);length(es2$pwt_hci)
 
+table(es2$obst1)
+table(es2$obst11)
+
+table(es2$country2)
 
