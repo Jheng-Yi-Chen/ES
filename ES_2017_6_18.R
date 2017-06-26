@@ -12,13 +12,41 @@ library(highcharter)
 
 ##################################################
 
-ES1 <- read.dta13(url("https://www.dropbox.com/s/i2b4v0wwouot9bo/ES-Indicators-Database-.dta?dl=0"))
+file <- url("https://mega.nz/#!F5cA2BbB!h7WZpRrjLNkY0xpVFzOS6cPUB1Eh6mWZl8BdfvXMRLY")
+ES1 <- read.dta13(file)
+
+##################################################
+
+ES1 <- read.dta("C:/Users/CJY/Desktop/eLand/ES-Indicators-Database-.dta")
+
+table(ES1$t5) # percent of firms having its own website
+# ES1$t51 <- as.factor(ES1$t5)
+ES1$t51 <- NA
+ES1$t51[ES1$t5 == 100 ] <- "WS"
+ES1$t51[ES1$t5 == 0 ] <- "NWS"
+table(ES1$t51)
+
+table(ES1$t6) # percent of firms using email to communicate with clients/suppliers
+# ES1$t61 <- as.factor(ES1$t6)
+ES1$t61 <- NA
+ES1$t61[ES1$t6 == 100 ] <- "EM"
+ES1$t61[ES1$t6 == 0 ] <- "NEM"
+table(ES1$t61)
+
+table(ES1$perf1) # real annual sales growth (%)
+
+ES1 %>% 
+  select(t51, t61, perf1) %>% 
+  na.omit() ->ES2
+
+ES2$WS_EM <- paste(ES2$t51, ES2$t61, sep = "")
+table(ES2$WS_EM)
 
 ##################################################
 
 table(es2$idstd) # firm id
 table(es2$year) # year
-table(es2$country2) #country
+table(es2$country2) # country
 
 table(es2$size) # company size
 table(es2$exporter) # exporter or now
@@ -54,7 +82,6 @@ table(es2$obst15) # the biggest obstacle, transport
 table(es2$fin2)
 table(es2$stra_sector)
 
-
 ##################################################
 
 table1 <- table(es2$stra_sector, es2$obst8)
@@ -89,7 +116,6 @@ comapnysize <- ggplot(es2, aes(es2$size))+
 comapnysize
 ggsave("C:/Users/CJY/Desktop/es/company size.png")
 
-
 expper <- qplot(es2$perf1, es2$car6, data = es2, colour = factor(es2$exporter)) + 
   scale_colour_manual(values = c("red","green"))
 expper
@@ -110,20 +136,19 @@ perff2
 
 ##################################################
 
-ggplot(es2, aes(x=es2$obst1)) + 
+ggplot(es2, aes(x = es2$obst1)) + 
   geom_bar()
 
-ggplot(es2, aes(x = factor(es2$obst1), y=es2$perf1)) +  
+ggplot(es2, aes(x = factor(es2$obst1), y = es2$perf1)) +  
   geom_boxplot()
 
-ggplot(es$soe, aes(x=factor(es$soe), y=es$per)) +  
+ggplot(es$soe, aes(x = factor(es$soe), y = es$per)) +  
   geom_boxplot() +
   scale_fill_manual(values = c("yellow", "orange")) + 
   ggtitle("SOE and Performance") + 
   theme(axis.text.x = element_text(angle=90, face="bold", colour="black"))
 
-mosaicplot(~obst1 + car1, data = es2, main = "Survival on The Titanic", color= T)
-
+mosaicplot( ~ obst1 + car1, data = es2, main = "Survival on The Titanic", color= T)
 
 ##################################################
 
