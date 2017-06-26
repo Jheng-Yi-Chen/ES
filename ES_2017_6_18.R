@@ -12,12 +12,8 @@ library(highcharter)
 
 ##################################################
 
-file <- url("https://mega.nz/#!F5cA2BbB!h7WZpRrjLNkY0xpVFzOS6cPUB1Eh6mWZl8BdfvXMRLY")
-ES1 <- read.dta13(file)
-
-##################################################
-
 ES1 <- read.dta("C:/Users/CJY/Desktop/eLand/ES-Indicators-Database-.dta")
+str(ES1)
 
 table(ES1$t5) # percent of firms having its own website
 # ES1$t51 <- as.factor(ES1$t5)
@@ -34,13 +30,48 @@ ES1$t61[ES1$t6 == 0 ] <- "NEM"
 table(ES1$t61)
 
 table(ES1$perf1) # real annual sales growth (%)
+table(ES1$perf2) # annual employment growth (%)
+table(ES1$car1) # company age
+
+table(ES1$wk1) # percent of firms offering formal training
+table(ES1$wk8) # years of the top manager's experience working in the firm's sector
 
 ES1 %>% 
-  select(t51, t61, perf1) %>% 
+  select(t51, t61, wk1, wk8, car1, perf1, perf2) %>% 
   na.omit() ->ES2
 
 ES2$WS_EM <- paste(ES2$t51, ES2$t61, sep = "")
 table(ES2$WS_EM)
+
+ggplot(ES2, aes(x = ES2$WS_EM, y = ES2$perf1, fill = ES2$WS_EM)) +
+  geom_boxplot()
+
+ggplot(ES2, aes(x = ES2$WS_EM, y = ES2$perf1, fill = ES2$WS_EM)) +
+  geom_violin()
+
+ggplot(ES2, aes(x = ES2$WS_EM, y = ES2$perf2, fill = ES2$WS_EM)) +
+  geom_boxplot()
+
+ggplot(ES2, aes(x = ES2$WS_EM, y = ES2$car1, fill = ES2$WS_EM)) +
+  geom_boxplot()
+
+ggplot(ES2, aes(x = ES2$WS_EM, y = ES2$car1, fill = ES2$WS_EM)) +
+  geom_violin()
+
+# if (ES2$t51 == 1 | ES2$t61 == 1) {
+#   ES2$SITE_MAIL <- 1 # having website and having email
+# } else if (ES2$t51 == 1 | ES2$t61 == 0) {
+#   ES2$SITE_MAIL <- 2 # having website and no email
+# } else if (ES2$t51 == 0 | ES2$t61 == 1) {
+#   ES2$SITE_MAIL <- 3 # no website and having email
+# } else { # (ES2$t51 == 0 | ES2$t61 == 0)
+#   ES2$SITE_MAIL <- 4 # no website and no email
+# } 
+
+##################################################
+
+file <- url("https://mega.nz/#!F5cA2BbB!h7WZpRrjLNkY0xpVFzOS6cPUB1Eh6mWZl8BdfvXMRLY")
+ES1 <- read.dta13(file)
 
 ##################################################
 
