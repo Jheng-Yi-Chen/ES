@@ -9,6 +9,7 @@ library(dplyr)
 library(tidyr)
 library(plotly)
 library(highcharter)
+library(maps)
 
 ##################################################
 
@@ -108,13 +109,15 @@ str(TFPES1)
 
 table(TFPES1$WS_EM)
 
-ggplot(data = TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$WS_EM, fill = TFPES1$WS_EM)) +
-  geom_bar(stat = "identity") +
-  guides(fill = FALSE) +
-  xlab("Website and Email") + ylab("Count")
-
 ggplot(TFPES1, aes(x = TFPES1$wk1a, y = TFPES1$d2_orig1, fill = TFPES1$wk1a)) +
   geom_boxplot()
+
+ggplot(data = TFPES1, aes(x = TFPES1$WS_EM, fill = TFPES1$WS_EM)) +
+  geom_bar() +
+  guides(fill = FALSE) +
+  xlab("Website and Email") + ylab("Count") +
+  theme(axis.title.x = element_text(size = 16)) +
+  theme(axis.title.y = element_text(size = 16))
 
 ggplot(TFPES1, aes(x = "", fill = factor(TFPES1$WS_EM))) + 
   geom_bar(width = 1) +
@@ -122,7 +125,6 @@ ggplot(TFPES1, aes(x = "", fill = factor(TFPES1$WS_EM))) +
   labs(fill= "Website and Email", 
        x = NULL, y = NULL, title = "Website and Email") +
   coord_polar(theta = "y", start = 0)
-#caption="Source: mpg")
 
 ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
   geom_violin() +
@@ -131,6 +133,12 @@ ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) 
 
 ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
   geom_boxplot()
+
+
+
+
+
+
 
 ##################################################
 
