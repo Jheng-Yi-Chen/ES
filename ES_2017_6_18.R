@@ -34,14 +34,32 @@ table(ES1$perf2) # annual employment growth (%)
 table(ES1$car1) # company age
 
 table(ES1$wk1) # percent of firms offering formal training
+ES1$wk1a <- NA
+ES1$wk1a[ES1$wk1 == 100 ] <- "T"
+ES1$wk1a[ES1$wk1 == 0 ] <- "NT"
+table(ES1$wk1a)
+
 table(ES1$wk8) # years of the top manager's experience working in the firm's sector
 
 ES1 %>% 
-  select(t51, t61, wk1, wk8, car1, perf1, perf2) %>% 
+  select(idstd, t51, t61, wk1a, wk8, car1, perf1, perf2) %>% 
   na.omit() ->ES2
 
 ES2$WS_EM <- paste(ES2$t51, ES2$t61, sep = "")
 table(ES2$WS_EM)
+
+ES2$WS_EM[ES2$WS_EM == "NWSEM"] <- "1"
+ES2$WS_EM[ES2$WS_EM == "NWSNEM"] <- "3"
+ES2$WS_EM[ES2$WS_EM == "WSNEM"] <- "2"
+ES2$WS_EM[ES2$WS_EM == "WSEM"] <- "4"
+
+ES2$WS_EM[ES2$WS_EM == 1] <- "mail"
+ES2$WS_EM[ES2$WS_EM == 3] <- "nothing"
+ES2$WS_EM[ES2$WS_EM == 2] <- "website"
+ES2$WS_EM[ES2$WS_EM == 4] <- "both"
+
+ggplot(ES2, aes(x = ES2$wk1a, y = ES2$perf1, fill = ES2$wk1a)) +
+  geom_boxplot()
 
 ggplot(ES2, aes(x = ES2$WS_EM, y = ES2$perf1, fill = ES2$WS_EM)) +
   geom_boxplot()
@@ -67,6 +85,52 @@ ggplot(ES2, aes(x = ES2$WS_EM, y = ES2$car1, fill = ES2$WS_EM)) +
 # } else { # (ES2$t51 == 0 | ES2$t61 == 0)
 #   ES2$SITE_MAIL <- 4 # no website and no email
 # } 
+
+##################################################
+
+TFP1 <- read.dta("C:/Users/CJY/Desktop/eLand/Firm Level TFP Estimates and Factor Ratios_May_1_2017.dta")
+str(TFP1)
+
+table(TFP1$country_official) # table(TFP1$d2_gdp09)
+table(TFP1$year)
+table(TFP1$sector_MS) # Sector: Manufacturing or Services
+
+table(TFP1$d2_orig) # table(TFP1$d2_gdp09)
+TFP1$d2_orig[TFP1$d2_orig <= 0] <- NA
+TFP1$d2_orig1 <- log(TFP1$d2_orig)
+
+table(TFP1$d2_gdp09) # table(TFP1$d2_gdp09)
+
+########################################
+
+TFPES1 <- merge(x = TFP1, y = ES2, by = "idstd")
+str(TFPES1)
+
+table(TFPES1$WS_EM)
+
+ggplot(data = TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$WS_EM, fill = TFPES1$WS_EM)) +
+  geom_bar(stat = "identity") +
+  guides(fill = FALSE) +
+  xlab("Website and Email") + ylab("Count")
+
+ggplot(TFPES1, aes(x = TFPES1$wk1a, y = TFPES1$d2_orig1, fill = TFPES1$wk1a)) +
+  geom_boxplot()
+
+ggplot(TFPES1, aes(x = "", fill = factor(TFPES1$WS_EM))) + 
+  geom_bar(width = 1) +
+  theme(axis.line = element_blank(), plot.title = element_text(hjust = 0.5)) + 
+  labs(fill= "Website and Email", 
+       x = NULL, y = NULL, title = "Website and Email") +
+  coord_polar(theta = "y", start = 0)
+#caption="Source: mpg")
+
+ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
+  geom_violin() +
+  xlab("Website and Email") + ylab("Performance") +
+  labs(fill = "Website and Email")
+
+ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
+  geom_boxplot()
 
 ##################################################
 
