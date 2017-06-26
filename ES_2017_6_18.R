@@ -10,6 +10,8 @@ library(tidyr)
 library(plotly)
 library(highcharter)
 library(maps)
+library(ggmap)
+library(ggalt)
 
 ##################################################
 
@@ -129,16 +131,19 @@ ggplot(TFPES1, aes(x = "", fill = factor(TFPES1$WS_EM))) +
 ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
   geom_violin() +
   xlab("Website and Email") + ylab("Performance") +
-  labs(fill = "Website and Email")
+  labs(fill = "Website and Email") +
+  theme(axis.title.x = element_text(size = 16)) +
+  theme(axis.title.y = element_text(size = 16))
 
 ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
   geom_boxplot()
 
+map1 <- as.data.frame(table(TFPES1$country_official))  
+colnames(map1) <- c("Country","Freq")
+esmap <- get_map(location = map1$Country)
 
-
-
-
-
+chennai <-  geocode(TFPES1$country_official)  # get longitude and latitude
+esmap <- qmap(TFPES1$country_official, zoom=12, source = "google", maptype="satellite")  
 
 ##################################################
 
