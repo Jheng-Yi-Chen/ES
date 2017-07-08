@@ -130,13 +130,25 @@ ggplot(TFPES1, aes(x = "", fill = factor(TFPES1$WS_EM))) +
 
 ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
   geom_violin() +
+  geom_boxplot(fill = "white") +
+  xlab("Website and Email") + ylab("Performance") +
+  labs(fill = "Website and Email") +
+  theme(axis.title.x = element_text(size = 16)) +
+  theme(axis.title.y = element_text(size = 16))
+
+ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig, fill = TFPES1$WS_EM)) +
+  geom_boxplot() +
   xlab("Website and Email") + ylab("Performance") +
   labs(fill = "Website and Email") +
   theme(axis.title.x = element_text(size = 16)) +
   theme(axis.title.y = element_text(size = 16))
 
 ggplot(TFPES1, aes(x = TFPES1$WS_EM, y = TFPES1$d2_orig1, fill = TFPES1$WS_EM)) +
-  geom_boxplot()
+  geom_boxplot() +
+  xlab("Website and Email") + ylab("Performance") +
+  labs(fill = "Website and Email") +
+  theme(axis.title.x = element_text(size = 16)) +
+  theme(axis.title.y = element_text(size = 16))
 
 map1 <- as.data.frame(table(TFPES1$country_official))  
 colnames(map1) <- c("Country","Freq")
