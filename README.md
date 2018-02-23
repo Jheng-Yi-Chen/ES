@@ -1,3 +1,2 @@
-# ES
 
-Enterprise Surveys (ES): http://www.enterprisesurveys.org
+Enterprise Surveys: http://www.enterprisesurveys.org
