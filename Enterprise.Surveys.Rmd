@@ -1,5 +1,5 @@
 ---
-title: "CN 12 in ES"
+title: "Enterprise Surveys"
 author: "Jheng-Yi Chen"
 date: "February 25, 2017"
 output:
@@ -24,7 +24,7 @@ attach(cn)
 ```
 
 ```{r}
-cn <- read.dta("C:/Users/CJY/Desktop/China-2012-full_ES_N2700_data.dta")
+cn <- read.dta("China-2012-full_ES_N2700_data.dta")
 attach(cn)
 ```
 
@@ -34,26 +34,20 @@ attach(cn)
 #
 ```{r, echo=TRUE}
 library(ggplot2)
-industryplot <- ggplot(cn, aes(a4a))+
-  geom_bar()+
-  coord_flip()
-industryplot
-ggsave("industryplot.png")
+(plot.industry <- ggplot(cn, aes(a4a)) + geom_bar() + coord_flip())
+ggsave("plot.industry.png")
 ```
 
-![](industryplot.png)
+![](plot.industry.png)
 
 #
 
 ```{r}
-a4a<-ITandRetail
-ITandRetail <- NA
-ITandRetail[a4a = "IT" ] <- 1
-ITandRetail[a4a = "Retail" ] <- 2
-table(ITandRetail)
+a4a <- IT.Retail
+IT.Retail <- NA
+IT.Retail[a4a = "IT" ] <- 1
+IT.Retail[a4a = "Retail" ] <- 2
+table(IT.Retail)
 
-ownership<-ggplot(china$a4a, aes(b2a, b2b))
+own <- ggplot(china$a4a, aes(b2a, b2b))
 ```
-
-
-
