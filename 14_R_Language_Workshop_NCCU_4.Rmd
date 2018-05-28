@@ -1,0 +1,126 @@
+---
+title: "RMD"
+author: "JY Chen"
+date: "2017/5/24"
+output:
+  html_document:
+    fig_height: 7.5
+    fig_width: 10
+    theme: cosmo
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+---
+
+<iframe src="https://dsp.im/" height=600 width=800></iframe>
+
+第`r 3+1`門課程，$P_{i}, 2^2$ \
+"Knit" command (Ctrl+Shift+K)
+
+# Header 1
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6
+
+粗體：**bold** 或 __bold__\
+斜體：*italics* 或 _italics_\
+刪除線：~~我是豬~~
+
+- A
+- B
+
++ C
++ D
+
+* E
+* F
+
+1. G
+2. H
+2. I
+
+  標題一      |    標題二     
+-------------:| ------------- 
+    123       |    456        
+    789       |    0.0        
+
+大家好，我是**LIYUN**(1.使用粗體)，目前就讀於國立政治大學，家裡共有：
+
+* 我爸
+* 我媽
+* 我哥
+* 我大弟
+* 我小弟
+
+有六個成員，我是女生，我長這樣：
+![](C:/Users/CJY/Desktop/image.png)
+想要和我做朋有的人可以加我[臉書](https://goo.gl/h39Soa)
+
+alt + control + i
+```{r}
+
+```
+
+```{r, echo=TRUE}
+summary(cars$dist)
+```
+
+```{r plot, echo=TRUE}
+summary(cars)
+plot(cars)
+```
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+```
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+iris %>% 
+  ggplot(aes(x=Sepal.Length, y=Petal.Length, color=Species)) + 
+  geom_point(shape=1, size=2) # shape控制圖示；size控制點的大小
+```
+
+```{r}
+# Hint for Windows：
+dat <- read.csv("C:/Users/CJY/Desktop/weatherbig5.csv") 
+max(dat[c(1, 8), 4:5])
+min(dat[c(1, 8), 4:5])
+# 預測高溫約`r max(dat[1:2,4:5])`度，低溫約`r min(dat[1:2,4:5])`度
+```
+
+預測高溫約`r max(dat[c(1, 8), 4:5])`度，低溫約`r min(dat[c(1, 8), 4:5])`度
+
+```{r, results="asis"}
+knitr::kable(women)
+```
+
+```{r}
+library(DT)
+datatable(head(iris))
+```
+
+```{r}
+datatable(iris) %>%
+  formatStyle("Sepal.Length",  color = "red", backgroundColor = "orange", fontWeight = "bold")
+```
+
+```{r}
+datatable(cars) %>% 
+  formatStyle( "dist",
+  target = "row",
+  backgroundColor = styleEqual(c(10), c("pink"))
+)
+```
+
+```{r}
+# 呈現三列
+datatable(iris, options = list(pageLength = 3))
+# 呈現五列
+datatable(cars, options = list(pageLength = 5)) 
+```
+
+
+
